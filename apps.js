@@ -2,6 +2,10 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 const postRoute = require("./routes/post")
+const dotenv = require("dotenv")
+const mongoose = require("mongoose")
+const MongoClient = require('mongodb').MongoClient;
+dotenv.config()
 
 /*middleware
 const myOwnMiddleware =(req,res,next)=>{
@@ -11,21 +15,31 @@ const myOwnMiddleware =(req,res,next)=>{
 app.use(myOwnMiddleware)
 */
 
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://yustinusv:nanda333@clusternode.hhrgh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+/*const uri = process.env.MONGO_URI;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 client.connect(err => {
   const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
   client.close();
-});
+});*/
+
+mongoose.connect(
+  process.env.MONGO_URI,
+  {useNewUrlParser:true}
+).then(()=>console.log("DB Connection"))
+
+mongoose.connection.on('error',err=>{
+  console.log(`DB Connection Error ${err}`);
+})
+
+
 
 //middleware
 app.use(morgan("dev"))
 app.use('/', postRoute)
 
 
-const port = 8080
+const port = process.env.PORT || 8080
 app.listen(port,()=>{
   console.log(`A Node Js API is listening on port: ${port}`)
 })
