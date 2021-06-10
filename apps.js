@@ -4,7 +4,8 @@ const app = express()
 const postRoute = require("./routes/post")
 const dotenv = require("dotenv")
 const mongoose = require("mongoose")
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient
+const bodyParse = require('body-parser')
 dotenv.config()
 
 /*middleware
@@ -36,6 +37,7 @@ mongoose.connection.on('error',err=>{
 
 //middleware
 app.use(morgan("dev"))
+app.use(bodyParse.json())
 app.use('/', postRoute)
 
 
