@@ -6,6 +6,7 @@ const dotenv = require("dotenv")
 const mongoose = require("mongoose")
 const MongoClient = require('mongodb').MongoClient
 const bodyParse = require('body-parser')
+const expressValidator = require('express-validator')
 dotenv.config()
 
 /*middleware
@@ -38,6 +39,7 @@ mongoose.connection.on('error',err=>{
 //middleware
 app.use(morgan("dev"))
 app.use(bodyParse.json())
+app.use(expressValidator())
 app.use('/', postRoute)
 
 
